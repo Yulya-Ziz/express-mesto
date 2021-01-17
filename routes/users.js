@@ -24,7 +24,7 @@ router.get('/users/:id', (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      res.send(`Error: ${err}`);
+      res.status(500).send(`Internal Server Error: ${err.message}`);
     });
 });
 

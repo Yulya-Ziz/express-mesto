@@ -8,7 +8,7 @@ router.get('/cards', (req, res) => {
       res.send(cardsList);
     })
     .catch((err) => {
-      res.send(`Error: ${err}`);
+      res.status(500).send(`Internal Server Error: ${err.message}`);
     });
 });
 
