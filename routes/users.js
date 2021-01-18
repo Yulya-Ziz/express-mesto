@@ -8,7 +8,7 @@ router.get('/users', (req, res) => {
       res.send(usersList);
     })
     .catch((err) => {
-      res.send(`Error: ${err}`);
+      res.status(500).send({ message: err.message });
     });
 });
 
@@ -24,7 +24,7 @@ router.get('/users/:id', (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      res.status(500).send(`Internal Server Error: ${err.message}`);
+      res.status(500).send({ message: err.message });
     });
 });
 
