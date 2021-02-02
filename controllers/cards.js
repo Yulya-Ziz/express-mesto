@@ -17,7 +17,7 @@ const createCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      res.status((err.name === 'ValidationError') ? 400 : 500).send(err.message);
+      res.status((err.name === 'ValidationError') ? 400 : 500).send({ message: err.message });
     });
 };
 
@@ -25,10 +25,10 @@ const deleteCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
     .then((del) => {
-      res.status((!del) ? 404 : 200).send();
+      res.status((!del) ? 404 : 200).send({ message: 'card deleted' });
     })
     .catch((err) => {
-      res.status((err.name === 'CastError') ? 404 : 500).send(err.message);
+      res.status((err.name === 'CastError') ? 404 : 500).send({ message: err.message });
     });
 };
 
@@ -39,7 +39,7 @@ const setLike = (req, res) => {
       res.status((!card) ? 404 : 200).send(card);
     })
     .catch((err) => {
-      res.status((err.name === 'CastError') ? 404 : 500).send(err.message);
+      res.status((err.name === 'CastError') ? 404 : 500).send({ message: err.message });
     });
 };
 
@@ -50,7 +50,7 @@ const setDislike = (req, res) => {
       res.status((!card) ? 404 : 200).send(card);
     })
     .catch((err) => {
-      res.status((err.name === 'CastError') ? 404 : 500).send(err.message);
+      res.status((err.name === 'CastError') ? 404 : 500).send({ message: err.message });
     });
 };
 
