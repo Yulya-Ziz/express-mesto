@@ -14,19 +14,20 @@ const getUser = (req, res) => {
   const { id } = req.params;
   User.findOne({ id })
     .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Нет пользователя с таким id' });
-        return;
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        res.status(404).send({ message: 'user not found' });
       }
-      res.send(user);
     })
     .catch((err) => {
-      res.status((err.name === 'CastError') ? 404 : 500).send({ message: err.message });
+      res.status((err.name === 'CastError') ? 400 : 500).send({ message: err.message });
     });
 };
 
 const addUser = (req, res) => {
-  User.create(req.body)
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
     .then((user) => {
       res.send({ user });
     })
@@ -36,22 +37,42 @@ const addUser = (req, res) => {
 };
 
 const setProfile = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body)
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about },
+    { new: true, runValidators: true, upsert: true })
     .then((user) => {
-      res.send(user);
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        res.status(404).send({ message: 'user not found' });
+      }
     })
     .catch((err) => {
-      res.status((err.name === 'ValidationError') ? 400 : 500).send({ message: err.message });
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        res.status(400).send({ message: err.message });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
     });
 };
 
 const setAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body)
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user._id, { avatar },
+    { new: true, runValidators: true, upsert: true })
     .then((user) => {
-      res.send(user);
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        res.status(404).send({ message: 'user not found' });
+      }
     })
     .catch((err) => {
-      res.status((err.name === 'ValidationError') ? 400 : 500).send({ message: err.message });
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        res.status(400).send({ message: err.message });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
     });
 };
 
